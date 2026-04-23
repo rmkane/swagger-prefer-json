@@ -19,6 +19,7 @@ App starts on `http://localhost:8080`.
 
 - Home: `GET /`
 - People: `GET /api/v1/people`
+- People (corrected wrapper): `GET /api/v1/people/corrected`
 - OpenAPI JSON: `GET /v3/api-docs`
 - Swagger UI: `GET /swagger-ui.html`
 
@@ -68,3 +69,12 @@ names (`<List>` and `<item>`).
 The practical middle-ground is a wrapper object around the list (for example a `People` DTO with a
 `List<Person> people` field). That gives domain-specific XML names like `<people>` / `<person>`
 without per-endpoint OpenAPI customizer code.
+
+This project also includes a corrected wrapper endpoint:
+
+- `GET /api/v1/people/corrected`
+
+That endpoint returns:
+
+- JSON: `{"people":[...]}`
+- XML: `<people><person>...</person></people>`
