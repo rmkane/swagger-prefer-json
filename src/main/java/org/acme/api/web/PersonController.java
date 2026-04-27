@@ -10,12 +10,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import jakarta.xml.bind.annotation.XmlAccessType;
-import jakarta.xml.bind.annotation.XmlAccessorType;
-import jakarta.xml.bind.annotation.XmlElement;
-import jakarta.xml.bind.annotation.XmlRootElement;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
+
 import lombok.RequiredArgsConstructor;
-import lombok.Value;
 
 @RestController
 @RequestMapping("/api/v1/people")
@@ -35,11 +34,15 @@ public class PersonController {
         return ResponseEntity.ok(new People(personService.findAll()));
     }
 
-    @Value
-    @XmlRootElement(name = "people")
-    @XmlAccessorType(XmlAccessType.FIELD)
-    public static class People {
-        @XmlElement(name = "person")
-        private List<Person> people;
+    @GetMapping(path = "/xml", produces = MediaType.APPLICATION_XML_VALUE)
+    public ResponseEntity<People> getPeopleXml() {
+        return ResponseEntity.ok(new People(personService.findAll()));
+    }
+
+    @JacksonXmlRootElement(localName = "people")
+    public record People(
+            @JacksonXmlElementWrapper(useWrapping = false)
+            @JacksonXmlProperty(localName = "person")
+            List<Person> people) {
     }
 }
