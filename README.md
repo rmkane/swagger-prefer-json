@@ -18,10 +18,24 @@ App starts on `http://localhost:8080`.
 ## Endpoints
 
 - Home: `GET /`
-- People: `GET /api/v1/people`
-- People (corrected wrapper): `GET /api/v1/people/corrected`
+- People (deprecated raw list): `GET /api/v1/people`
+- People (wrapper JSON/XML): `GET /api/v1/people/corrected`
+- People (XML only): `GET /api/v1/people/xml`
+- People (plain-text names): `GET /api/v1/people/summary`
 - OpenAPI JSON: `GET /v3/api-docs`
 - Swagger UI: `GET /swagger-ui.html`
+
+Browser-style `GET`s to `/api/...` often send `Accept` with `text/html` and `application/xml` but no
+`application/json`, which would otherwise yield XML. A servlet filter prefers JSON for those
+requests when the handler can still produce JSON (see `BrowserPreferJsonForApiFilter`). Handlers
+that only produce XML or `text/plain` are left unchanged.
+
+## Verify
+
+```bash
+mvn test
+./scripts/smoke-accept.sh   # optional; needs a running app, BASE_URL=http://localhost:8080 by default
+```
 
 ## Content Types
 

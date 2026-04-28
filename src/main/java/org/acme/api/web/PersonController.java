@@ -1,6 +1,7 @@
 package org.acme.api.web;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.acme.api.model.Person;
 import org.acme.api.service.PersonService;
@@ -37,6 +38,14 @@ public class PersonController {
     @GetMapping(path = "/xml", produces = MediaType.APPLICATION_XML_VALUE)
     public ResponseEntity<People> getPeopleXml() {
         return ResponseEntity.ok(new People(personService.findAll()));
+    }
+
+    @GetMapping(path = "/summary", produces = MediaType.TEXT_PLAIN_VALUE)
+    public ResponseEntity<String> getPeoplePlainSummary() {
+        String line = personService.findAll().stream()
+                .map(Person::getName)
+                .collect(Collectors.joining(", "));
+        return ResponseEntity.ok(line);
     }
 
     @JacksonXmlRootElement(localName = "people")
